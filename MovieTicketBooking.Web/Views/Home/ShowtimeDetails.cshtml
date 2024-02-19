@@ -1,0 +1,85 @@
+﻿@model MovieTicketBooking.Web.ViewModels.HomeViewModels.ShowtimeDetailsViewModel
+
+@{
+    ViewData["Title"] = "Showtime Details";
+
+    // Accessing header value
+    string headerValue = ViewData["Header"]?.ToString();
+}
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden; /* Prevent the background image from overflowing */
+    }
+
+    .background-wrapper {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1; /* Ensure the background wrapper is behind other elements */
+        background-image: url('@Model.Image');
+        background-size: cover;
+        background-position: center;
+        filter: blur(8px); /* Apply blur effect to the background wrapper */
+    }
+
+    .content-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(255, 255, 255, 0.8);
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        z-index: 1; /* Ensure the content container is above the background wrapper */
+    }
+
+    .card {
+        background-color: transparent;
+        box-shadow: none;
+    }
+
+    .card-body {
+        padding-top: 50px;
+    }
+</style>
+
+<div class="background-wrapper"></div>
+
+<div class="content-container">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card">
+                    <img src="@Model.Image" class="card-img-top" alt="@Model.MovieName">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">@Model.MovieName</h5>
+                        <hr />
+                        <p class="card-text"><strong>Genre:</strong> @Model.Genre</p>
+                        <p class="card-text"><strong>Description:</strong> @Model.Description</p>
+                        <p class="card-text"><strong>Director:</strong> @Model.Director</p>
+                        <p class="card-text"><strong>Release Date:</strong> @Model.ReleaseDate.ToShortDateString()</p>
+                        <p class="card-text"><strong>Duration:</strong> @Model.Duration</p>
+                        <hr />
+                        <p class="card-text"><strong>Theater:</strong> @Model.TheaterName</p>
+                        <p class="card-text"><strong>Location:</strong> @Model.Location</p>
+                        <p class="card-text"><strong>Show Date:</strong> @Model.DateTime.ToString("dd MMMM yyyy")</p>
+                        <p class="card-text"><strong>Show Time:</strong> @Model.DateTime.ToString("hh:mm tt")</p>
+                        <hr />
+                        <a asp-action="AvailableTickets" asp-route-id="@Model.ShowtimeId" class="btn btn-outline-warning">See Available Tickets</a>
+                        <a asp-action="Index" class="btn btn-outline-secondary">Back</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

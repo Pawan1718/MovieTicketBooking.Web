@@ -1,0 +1,57 @@
+﻿@model MovieTicketBooking.Web.ViewModels.MovieViewModels.PagedMovieViewModel
+
+<br />
+<h1 class="mt-5">Movie List</h1>
+<hr class="text-dark" />
+<div class="row">
+<div class="col-7">
+<p>
+    <a asp-action="AddMovie" class="btn btn-outline-primary">Add Movie</a>
+</p>
+    </div>
+
+    <div class="col-4">
+        <form class="form-inline d-flex justify-content-end" asp-action="MovieList" method="post">
+            <input class="form-control  mr-sm-2" type="search" name="SearchText" placeholder="Search by Movie & Genre..." value="@ViewData["filterData"]" />
+            <button class="btn btn-secondary my-2 my-sm-0" type="submit" value="Search">Search</button>
+        </form>
+    </div>
+</div>
+<table class="table table-striped table-bordered shadow">
+    <thead>
+        <tr class="table-active table-hover">
+            <th scope="row">Title</th>
+            <th scope="row">Description</th>
+            <th scope="row">Genre</th>
+            <th scope="row">Release Date</th>
+            <th scope="row">Duration (Minutes)</th>
+            <th scope="row">Poster</th>
+            <th scope="row">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Movies)
+                {
+            <tr class="table-light">
+                <td scope="row" class="col-2">@Html.DisplayFor(modelItem => item.Title)</td>
+                <td scope="row" class="col-5">@Html.DisplayFor(modelItem => item.Description)</td>
+                <td class="col-2">@Html.DisplayFor(modelItem => item.Genre)</td>
+                <td >@Html.DisplayFor(modelItem => item.ReleaseDate)</td>
+                <td class="col-0">@Html.DisplayFor(modelItem => item.Duration)</td>
+                <td class ="col-1"><img src="@item.ImageUrl" class="img-fluid" alt="Movie Poster" style="width: 40px;" /></td>
+                        <td class="col-2">
+                            <a asp-action="EditMovie" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary">Edit</a>
+                            <a asp-action="RemoveMovie" asp-route-id="@item.Id" class="btn btn-sm btn-outline-danger">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+@{
+    var previousDisabled = Model.PageInfo.HasPrevious ? "" : "disabled";
+    var nextDisabled = Model.PageInfo.HasNext ? "" : "disabled";
+}
+<a asp-route-FilterText="@ViewData["filterData"]" class="btn btn-sm btn-outline-info @previousDisabled"
+   asp-route-pageNo="@(Model.PageInfo.PageNo - 1)">&laquo; Pre</a>
+<a asp-route-FilterText="@ViewData["filterData"]" class="btn btn-sm btn-outline-info @nextDisabled"
+   asp-route-pageNo="@(Model.PageInfo.PageNo + 1)">Next &raquo;</a>

@@ -1,0 +1,54 @@
+﻿@using MovieTicketBooking.Web.ViewModels.TicketViewModels
+@model IEnumerable<BookingViewModel>
+
+
+<div class="container mt-5">
+    <div class="row">
+        @foreach (var booking in Model)
+        {
+            <div class="col-md-6 mb-4">
+                <div class="card ticket-card alert-warning" id="booking-@booking.BookingId">
+                    <div class="card-body">
+                        <div class="ticket-header">
+                            <h2 class="ticket-title text-center">== Movie Ticket ==</h2>
+                            <p class="ticket-subtitle">Booking ID: @booking.BookingId  |  Booking Date: @booking.BookingDate.ToString("dd/MM/yyyy")</p>
+                        </div>
+                        <hr class="ticket-divider">
+                        <div class="ticket-details">
+                            <p class="ticket-info">Movie: @booking.MovieName</p>
+                            <p class="ticket-info">Theater: @booking.TheaterName</p>
+                            <p class="ticket-info">Showtime: @booking.Showtime</p>
+                            <p class="ticket-info">Address: @booking.Address</p>
+                        </div>
+                        <hr class="ticket-divider">
+                        <div class="ticket-seats">
+                            <h5 class="ticket-subtitle">Seats:</h5>
+                            <ul class="ticket-seat-list">
+                                @foreach (var ticket in booking.Tickets)
+                                {
+                                    <li class="ticket-seat">Seat Number: @ticket.SeatNo</li>
+                                }
+                            </ul>
+                        </div>
+                        <hr class="ticket-divider">
+                        <div class="card-footer">
+                        <button class="btn btn-outline-primary ticket-button" onclick="PrintTicket('@booking.BookingId')">
+                            Print Ticket
+                        </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+@section scripts{
+    <script>
+        function PrintTicket(bookingId) {
+    var element = document.getElementById('booking-' + bookingId);
+    element.classList.add('print-section');
+    window.print();
+    element.classList.remove('print-section');
+        }
+    </script>
+}

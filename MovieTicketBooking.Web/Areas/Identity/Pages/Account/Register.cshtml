@@ -1,0 +1,143 @@
+﻿@page
+@model RegisterModel
+@{
+    ViewData["Title"] = "Register";
+}
+<br />
+
+<h1 class="text-center mt-5">@ViewData["Title"]</h1>
+
+<div class="row justify-content-center">
+    <div class="col-md-4 shadow p-3 mb-5 bg-body rounded">
+        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="needs-validation" novalidate>
+            <h2>Create a new account.</h2>
+            <hr />
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+            <table>
+                <tr>
+                    <td colspan="2">
+                        <div class="mb-3">
+                            <label for="inputName" class="form-label">Name</label>
+                            <input asp-for="Input.Name" class="form-control" aria-required="true" id="inputName" placeholder="Name" required />
+                            <span asp-validation-for="Input.Name" class="text-danger"></span>
+                            <div class="invalid-feedback">Please provide a valid Name.</div>
+                        </div>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="mb-3">
+                            <label for="inputMobile" class="form-label">Mobile</label>
+                            <input asp-for="Input.Mobile" class="form-control" aria-required="true" id="inputMobile" required />
+                            <span asp-validation-for="Input.Name" class="text-danger"></span>
+                            <div class="invalid-feedback">Please provide a valid email.</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="mb-3">
+                            <label for="inputEmail" class="form-label">Email</label>
+                            <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" id="inputEmail" placeholder="name@example.com" required />
+                            <span asp-validation-for="Input.Email" class="text-danger"></span>
+                            <div class="invalid-feedback">Please provide a valid email.</div>
+                        </div>
+                    </td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="mb-3">
+                            <label for="inputPassword" class="form-label">Password</label>
+                            <input asp-for="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" id="inputPassword" placeholder="Password" required />
+                            <span asp-validation-for="Input.Password" class="text-danger"></span>
+                            <div class="invalid-feedback">Please provide a password.</div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="mb-3">
+                            <label for="inputConfirmPassword" class="form-label">Confirm Password</label>
+                            <input asp-for="Input.ConfirmPassword" class="form-control" autocomplete="new-password" aria-required="true" id="inputConfirmPassword" placeholder="Confirm Password" required />
+                            <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+                            <div class="invalid-feedback">Please confirm your password.</div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+             <button id="registerSubmit" type="submit" class="w-100 btn btn-primary">Register</button>
+        </form>
+    </div>
+</div>
+
+
+
+<div>
+    <div class="col-md-6 col-md-offset-2">
+        <section>
+            <hr />
+            @{
+                if ((Model.ExternalLogins?.Count ?? 0) == 0)
+                {
+                }
+                else
+                {
+                    <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post" class="form-horizontal">
+                        <div>
+                            <p>
+                                @foreach (var provider in Model.ExternalLogins!)
+                                {
+                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                                }
+                            </p>
+                        </div>
+                    </form>
+                }
+            }
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
+
+<style>
+    /* Add your custom CSS styles here */
+    /* Example: */
+    /* Style for form labels */
+    .form-label {
+        font-weight: bold;
+    }
+    /* Style for form input fields */
+    .form-control {
+        border-radius: 0;
+    }
+    /* Style for invalid feedback */
+    .invalid-feedback {
+        display: block;
+    }
+</style>
+
+<style>
+    /* Add your custom CSS styles here */
+    /* Align the registration form to the center of the page */
+    .justify-content-center {
+        display: flex;
+        justify-content: center;
+    }
+    /* Add shadow effect to the form */
+    .shadow {
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    }
+    /* Style for form labels */
+    .form-label {
+        font-weight: bold;
+    }
+    /* Style for form input fields */
+    .form-control {
+        border-radius: 0;
+    }
+    /* Style for invalid feedback */
+    .invalid-feedback {
+        display: block;
+    }
+</style>

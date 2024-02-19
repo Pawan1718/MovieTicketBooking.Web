@@ -1,0 +1,37 @@
+﻿
+@model IEnumerable< MovieTicketBooking.Web.ViewModels.HomeViewModels.DashboardViewModel>
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+<br/>
+<div class="container p-5 border-shadow">
+    <div class="container-fluid">
+        <div class="col-4">
+            <form class="form-inline d-flex justify-content-end" asp-action="Index" method="post">
+                <input class="form-control  mr-sm-2" type="search" name="SearchText" placeholder="Search Movie,Genre..." value="@ViewData["filterText"]" />
+                <button class="btn btn-secondary  my-2 my-sm-0" type="submit" value="Search">Search</button>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="container mt-5">
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-3 mb-5">
+                <div class="card shadow">
+                    <img src="@item.Image" class="card-img-top" alt="@item.MovieName">
+                    <div class="card-body">
+                        <h6 class="card-title" style="font-weight: bold; color: #333;">@item.MovieName</h6>
+                        <p class="card-text">U/A - @item.Genre</p>
+                    </div>
+                    <div class="card-footer" style="padding-top: 0;">
+                        <a asp-controller="Home" asp-action="ShowtimeDetails" asp-route-id="@item.ShowtimeId" class="btn btn-outline-info">Book Tickets <i class="fa-solid fa-ticket"></i></a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+ 

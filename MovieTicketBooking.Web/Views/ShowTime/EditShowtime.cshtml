@@ -1,0 +1,71 @@
+﻿@model MovieTicketBooking.Web.ViewModels.ShowtimeViewModels.EditShowtimeViewModel
+
+@{
+    ViewData["Title"] = "EditShowtime";
+}
+<br />
+<h1 class="mt-5">Edit Showtime</h1>
+
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <!-- Changed from 4 to 8 to allocate more space to the form -->
+        <form asp-action="EditShowtime">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <input type="hidden" asp-for="Id" class="form-control" />
+                <span asp-validation-for="Id" class="text-danger"></span>
+            </div>
+
+            <div class="row">
+                <!-- New row for two columns -->
+                <div class="col-md-6">
+                    <!-- First column -->
+                    <div class="form-group mt-3">
+                        <label asp-for="MovieId" class="control-label">Movie</label>
+                        <select asp-for="MovieId" class="form-control" asp-items="@ViewBag.movieList">
+                            <option value="" disabled selected>-- Select Movie --</option>
+                        </select>
+                        <span asp-validation-for="MovieId" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <label asp-for="Price" class="control-label"></label>
+                        <input asp-for="Price" class="form-control" />
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <!-- Second column -->
+                    <div class="form-group mt-3">
+                        <label asp-for="TheaterId" class="control-label">Theater</label>
+                        <select asp-for="TheaterId" class="form-control" asp-items="@ViewBag.theaterList">
+                            <option value="" disabled selected>-- Select Theater --</option>
+                        </select>
+                        <span asp-validation-for="TheaterId" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group mt-3">
+                        <label asp-for="DateTime" class="control-label">Show Time</label>
+                        <input asp-for="DateTime" class="form-control" />
+                        <span asp-validation-for="DateTime" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group mt-3">
+                <input type="submit" value="Update" class="btn btn-outline-primary" />
+                <a asp-action="Showtime" class="btn btn-outline-secondary">Back</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

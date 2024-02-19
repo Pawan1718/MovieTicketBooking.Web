@@ -1,0 +1,30 @@
+﻿@model IEnumerable<MovieTicketBooking.Web.ViewModels.DashboardViewModel.DashboardBookingViewModel>
+
+@{
+    ViewData["Title"] = "GetBookedTickets";
+}
+
+<h1 class="mb-4">Admin Dashboard - Get Booked Tickets</h1>
+
+<div class="table-responsive">
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>User Name</th>
+                <th>Show Time</th>
+                <th>Seat Numbers</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.UserName)</td>
+                    <td>@Html.DisplayFor(modelItem => item.ShowTime)</td>
+                    <td>@Html.DisplayFor(modelItem => item.SeatNo)</td>
+                    
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

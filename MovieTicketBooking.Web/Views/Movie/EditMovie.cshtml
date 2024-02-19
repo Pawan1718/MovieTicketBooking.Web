@@ -1,0 +1,94 @@
+﻿@model MovieTicketBooking.Web.ViewModels.MovieViewModels.EditMovieViewModel
+
+@{
+    ViewData["Title"] = "EditMovie";
+}
+
+<br />
+<div class="conatainer mt-5">
+<div class="row">
+    <div class="col-6">
+        <h1>Movie Poster</h1>
+        <img src="@Model.ImageUrl" class="p-1" style="width:400px; height:400px;" />
+    </div>
+   
+    <div class="col-md-6">
+        <h1>Edit Movie Details</h1>
+        <hr />
+        <form asp-action="EditMovie" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <table>
+                <tr>
+                    <td>
+                        <div class="form-group p-1">
+                            <label asp-for="Title" class="control-label"></label>
+                            <input asp-for="Title" class="form-control" />
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group p-1">
+                            <label asp-for="Genre" class="control-label"></label>
+                            <input asp-for="Genre" class="form-control" />
+                            <span asp-validation-for="Genre" class="text-danger"></span>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div class="form-group p-1">
+                            <label asp-for="Description" class="control-label"></label>
+                            <textarea asp-for="Description" class="form-control"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                    </td>
+                   
+                </tr>
+                <tr>
+                    <td>
+                        <div class="form-group p-1">
+                            <label asp-for="Director" class="control-label"></label>
+                            <input asp-for="Director" class="form-control" />
+                            <span asp-validation-for="Director" class="text-danger"></span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="form-group p-1">
+                            <label asp-for="ReleaseDate" class="control-label"></label>
+                            <input asp-for="ReleaseDate" class="form-control" />
+                            <span asp-validation-for="ReleaseDate" class="text-danger"></span>
+                        </div>
+                    </td>
+                </tr>
+                    <tr>
+                    <td>
+                        <div class="form-group p-1">
+                            <label asp-for="Duration" class="control-label"></label>
+                            <input asp-for="Duration" class="form-control" />
+                            <span asp-validation-for="Duration" class="text-danger"></span>
+                        </div>
+                    </td>
+
+                    <td>
+                        <div class="form-group p-1">
+                            <label asp-for="ChooseImage" class="control-label">Choose Image</label>
+                            <input asp-for="ChooseImage" type="file" class="form-control" />
+                            <span asp-validation-for="ChooseImage" class="text-danger"></span>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+            <div class="form-group mt-2">
+                <input type="submit" value="Update" class="btn btn-outline-primary" />
+                    <a asp-action="MovieList" class="btn btn-outline-secondary">Back</a>
+            </div>
+        </form>
+    </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

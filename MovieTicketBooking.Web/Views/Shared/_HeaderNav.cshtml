@@ -1,0 +1,46 @@
+﻿@using MovieTicketBooking.Infrastructures
+<nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index"><i class="fa-solid fa-film"> Movie Ticket Booking</i></a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarColor02">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Home <i class="fa-solid fa-house"></i></a>
+                </li>
+                @if (User.IsInRole(GlobalConfiguration.Admin_Role))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link text-light" asp-area="" asp-controller="Theater" asp-action="TheaterList">Theater <i class="fa-solid fa-masks-theater"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" asp-area="" asp-controller="Movie" asp-action="MovieList">Movie <i class="fa-solid fa-film"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" asp-area="" asp-controller="ShowTime" asp-action="Showtime">ShowTimes <i class="fa-solid fa-ticket"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">About</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+                        <div class="dropdown-menu">
+                            <a class="dropdown-item" href="#">Action</a>
+                            <a class="dropdown-item" href="#">Another action</a>
+                            <a class="dropdown-item" href="#">Something else here</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">Separated link</a>
+                        </div>
+                    </li>
+                }
+            </ul>
+              
+                <form class="d-flex">
+                <partial name="_LoginPartial" />
+            </form>
+
+        </div>
+    </div>
+</nav>
