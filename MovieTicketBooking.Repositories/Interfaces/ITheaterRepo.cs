@@ -14,5 +14,9 @@ namespace MovieTicketBooking.Repositories.Interfaces
         Task Save(Theater theater);
         Task Edit(Theater theater);
         Task Remove(Theater theater);
+        Task<bool> isTheaterExist(string theaterName);
+        Task<bool> isMovieExist(int id);
+        Task<bool> isTheaterWithShowtimesExist(int theaterId);
+
     }
 }

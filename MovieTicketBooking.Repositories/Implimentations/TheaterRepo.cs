@@ -36,6 +36,21 @@ namespace MovieTicketBooking.Repositories.Implimentations
             return await context.Theaters.FindAsync(id);
         }
 
+        public async Task<bool> isMovieExist(int id)
+        {
+            return await context.Movies.AnyAsync(x => x.Id == id);
+        }
+
+        public async Task<bool> isTheaterExist(string theaterName)
+        {
+            return await context.Theaters.AnyAsync(x => x.TheaterName == theaterName);
+        }
+
+        public async Task<bool> isTheaterWithShowtimesExist(int theaterId)
+        {
+            return await context.ShowTimes.AnyAsync(x => x.TheaterId == theaterId);
+        }
+
         public async Task Remove(Theater theater)
         {
              context.Theaters.Remove(theater);

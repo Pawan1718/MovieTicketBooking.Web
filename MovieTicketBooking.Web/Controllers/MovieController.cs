@@ -10,8 +10,7 @@ using System.IO;
 
 namespace MovieTicketBooking.Web.Controllers
 {
-    [Authorize(Roles ="Admin")]
-
+    [Authorize(Roles = "Admin")]
     public class MovieController : Controller
     {
         private readonly IMovieRepo movieRepo;
@@ -22,11 +21,11 @@ namespace MovieTicketBooking.Web.Controllers
             movieRepo = _movieRepo;
             UtilityRepo = utilityRepo;
         }
-        public async Task<IActionResult> MovieList(string FilterText,int pageNo = 1, int pageSize = 3, string SearchText=null )
+        public async Task<IActionResult> MovieList(string FilterText, int pageNo = 1, int pageSize = 3, string SearchText = null)
         {
-         List<MovieViewModel> vm = new List<MovieViewModel>();
+            List<MovieViewModel> vm = new List<MovieViewModel>();
             var movies = await movieRepo.GetAll();
-            if (SearchText!=null)
+            if (SearchText != null)
             {
                 pageNo = 1;
             }
@@ -45,7 +44,7 @@ namespace MovieTicketBooking.Web.Controllers
             movies = movies.Skip((pageNo - 1) * pageSize).Take(pageSize).ToList();
             foreach (var movie in movies)
             {
-                 vm.Add(new MovieViewModel
+                vm.Add(new MovieViewModel
                 {
                     Id = movie.Id,
                     Title = movie.Title,
@@ -58,7 +57,7 @@ namespace MovieTicketBooking.Web.Controllers
                 });
             }
             var pvm = new PagedMovieViewModel
-            { 
+            {
                 Movies = vm,
                 PageInfo = new Utility.PageInfo
                 {
@@ -76,26 +75,124 @@ namespace MovieTicketBooking.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> AddMovie(AddMovieViewModel vm)
         {
-            var movie = new Movie
+            if (ModelState.IsValid)
             {
-                Title = vm.Title,
-                Description = vm.Description,
-                Genre = vm.Genre,
-                Director = vm.Director,
-                Duration = vm.Duration,
-                ReleaseDate = vm.ReleaseDate,
-            };
-            if (vm.ImageUrl != null)
-            {
-                movie.ImageUrl = await UtilityRepo.SaveImage(containerName, vm.ImageUrl);
+                try
+                {
+                    if (await movieRepo.isMovieExist(vm.Title))
+                    {
+                        TempData["error"] = vm.Title + " " + "already exist in database!";
+                        return View(vm);
+
+                    }
+                    else
+                    {
+                        var movie = new Movie
+                        {
+                            Title = vm.Title,
+                            Description = vm.Description,
+                            Genre = vm.Genre,
+                            Director = vm.Director,
+                            Duration = vm.Duration,
+                            ReleaseDate = vm.ReleaseDate,
+                        };
+
+                        if (vm.ImageUrl != null)
+                        {
+                            movie.ImageUrl = await UtilityRepo.SaveImage(containerName, vm.ImageUrl);
+                        }
+
+                        await movieRepo.Save(movie);
+                        TempData["success"] = vm.Title + " " + "Movie added successfully!";
+                        return View(vm);
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    TempData["error"] = "Failed to add movie. " + ex.Message;
+                }
             }
-            await movieRepo.Save(movie);
-            return RedirectToAction("MovieList");
+            else
+            {
+                TempData["error"] = "Failed to add movie. Please check the input data.";
+            }
+
+            return View(vm);
         }
         public async Task<IActionResult> EditMovie(int id)
         {
+            try
+            {
+                var movie = await movieRepo.GetById(id);
+                if (movie == null)
+                {
+                    TempData["error"] = "Movie not found.";
+                    return RedirectToAction("Index");
+                }
+
+                EditMovieViewModel vm = new EditMovieViewModel
+                {
+                    Id = movie.Id,
+                    Title = movie.Title,
+                    Description = movie.Description,
+                    Genre = movie.Genre,
+                    Director = movie.Director,
+                    Duration = movie.Duration,
+                    ReleaseDate = movie.ReleaseDate,
+                    ImageUrl = movie.ImageUrl
+                };
+                return View(vm);
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = "An error occurred while loading movie details.";
+                return RedirectToAction("Index");
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditMovie(EditMovieViewModel vm)
+        {
+            try
+            {
+                var movie = await movieRepo.GetById(vm.Id);
+                if (movie == null)
+                {
+                    return NotFound();
+                }
+
+                movie.Title = vm.Title;
+                movie.Description = vm.Description;
+                movie.Genre = vm.Genre;
+                movie.Director = vm.Director;
+                movie.Duration = vm.Duration;
+                movie.ReleaseDate = vm.ReleaseDate;
+
+                if (vm.ImageUrl != null)
+                {
+                    movie.ImageUrl = await UtilityRepo.EditImage(containerName, vm.ChooseImage, movie.ImageUrl);
+                }
+
+                await movieRepo.Edit(movie);
+                TempData["success"] = "Movie updated successfully!";
+                return RedirectToAction("MovieList");
+            }
+            catch (Exception ex)
+            {
+                TempData["error"] = "Failed to update movie. " + ex.Message;
+                return RedirectToAction("MovieList");
+            }
+        }
+        public async Task<IActionResult> RemoveMovie(int id)
+        {
             var movie = await movieRepo.GetById(id);
-            EditMovieViewModel vm = new EditMovieViewModel
+            if (movie == null)
+            {
+                TempData["error"] = "Movie not found.";
+                return RedirectToAction("MovieList");
+            }
+
+            MovieViewModel vm = new MovieViewModel
             {
                 Id = movie.Id,
                 Title = movie.Title,
@@ -104,32 +201,17 @@ namespace MovieTicketBooking.Web.Controllers
                 Director = movie.Director,
                 Duration = movie.Duration,
                 ReleaseDate = movie.ReleaseDate,
-                ImageUrl= movie.ImageUrl
+                ImageUrl = movie.ImageUrl,
             };
+
+            bool hasAssociated = await movieRepo.isShowtimeExist(vm.Id) || await movieRepo.isMovieWithTheaterExist(vm.Id);
+            if (hasAssociated)
+            {
+                TempData["warning"] = "Cannot delete the movie because associated showtimes exist.";
+            }
             return View(vm);
         }
         [HttpPost]
-        public async Task<IActionResult> EditMovie(EditMovieViewModel vm)
-        {
-            var movie = await movieRepo.GetById(vm.Id);
-            if (movie == null)
-            {
-                return NotFound();
-            }
-            movie.Title = vm.Title;
-            movie.Description = vm.Description;
-            movie.Genre = vm.Genre;
-            movie.Director = vm.Director;
-            movie.Duration = vm.Duration;
-            movie.ReleaseDate = vm.ReleaseDate;
-
-            if (vm.ImageUrl != null)
-            {
-                movie.ImageUrl = await UtilityRepo.EditImage(containerName, vm.ChooseImage, movie.ImageUrl);
-            }
-            await movieRepo.Edit(movie);
-            return RedirectToAction("MovieList");
-        }
         public async Task<IActionResult> RemoveMovie(MovieViewModel vm)
         {
             var movie = new Movie
@@ -141,10 +223,19 @@ namespace MovieTicketBooking.Web.Controllers
                 Director = vm.Director,
                 Duration = vm.Duration,
                 ReleaseDate = vm.ReleaseDate,
+                ImageUrl = vm.ImageUrl,
             };
-            await movieRepo.Remove(movie);
-            return RedirectToAction("TheaterList");
-        }
 
+            bool hasAssociated = await movieRepo.isShowtimeExist(vm.Id) || await movieRepo.isMovieWithTheaterExist(vm.Id);
+            if (hasAssociated)
+            {
+                TempData["error"] = "Cannot delete the movie because associated showtimes exist.";
+                return View(vm);
+            }
+
+            await movieRepo.Remove(movie);
+            TempData["success"] = "Movie removed successfully!";
+            return RedirectToAction("MovieList");
+        }
     }
 }

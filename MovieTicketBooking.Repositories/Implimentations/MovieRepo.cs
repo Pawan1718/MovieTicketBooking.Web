@@ -23,13 +23,13 @@ namespace MovieTicketBooking.Repositories.Implimentations
         {
             context.Movies.Update(movie);
             await context.SaveChangesAsync();
-           
+
         }
 
         public async Task<IEnumerable<Movie>> GetAll()
         {
             return await context.Movies.ToListAsync();
-         
+
         }
 
         public async Task<Movie> GetById(int id)
@@ -37,18 +37,33 @@ namespace MovieTicketBooking.Repositories.Implimentations
             return await context.Movies.FindAsync(id);
         }
 
+        public async Task<bool> isMovieExist(string movie)
+        {
+            return await context.Movies.AnyAsync(x => x.Title == movie);
+        }
+
+        public async Task<bool> isMovieWithTheaterExist(int movieId)
+        {
+            return await context.Theaters.AnyAsync(x=>x.Id == movieId);
+        }
+
+        public async Task<bool> isShowtimeExist(int id)
+        {
+            return await context.ShowTimes.AnyAsync(x=>x.Id == id);
+        }
+
         public async Task Remove(Movie movie)
         {
             context.Movies.Remove(movie);
-           await context.SaveChangesAsync();
-           
+            await context.SaveChangesAsync();
+
         }
 
         public async Task Save(Movie movie)
         {
             await context.Movies.AddAsync(movie);
             await context.SaveChangesAsync();
-           
+
         }
     }
 }

@@ -97,6 +97,7 @@ namespace MovieTicketBooking.Web.Controllers
                 Price = vm.Price,
             };
             await showtimeRepo.Save(showtime);
+            TempData["success"] = "showtime added successfully!";
             return RedirectToAction("Showtime");
         }
         [Authorize(Roles = "Admin")]
@@ -134,6 +135,7 @@ namespace MovieTicketBooking.Web.Controllers
                 Price = vm.Price,
             };
             await showtimeRepo.Edit(show);
+            TempData["success"] = "showtime details updated!";
             return RedirectToAction("Showtime");
         }
         [Authorize(Roles = "Admin")]
@@ -151,7 +153,7 @@ namespace MovieTicketBooking.Web.Controllers
             return View(vm);
         }
         [HttpPost]
-        public async Task<IActionResult> RemoveTheater(RemoveShowtimeViewModel vm)
+        public async Task<IActionResult> RemoveShowtime(RemoveShowtimeViewModel vm)
         {
             var show = new ShowTime
             {
@@ -162,9 +164,11 @@ namespace MovieTicketBooking.Web.Controllers
 
             };
             await showtimeRepo.Remove(show);
+            TempData["success"] = "showtime removed successfully!";
             return RedirectToAction("Showtime");
         }
-      public async Task<IActionResult> GetBookedTickets(int id)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetBookedTickets(int id)
 {
     var bookings = await bookingRepo.GetAll(id);
     var vm = bookings.Select(b => new DashboardBookingViewModel
@@ -176,6 +180,5 @@ namespace MovieTicketBooking.Web.Controllers
     
     return View(vm);
 }
-
     }
 }
